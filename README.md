@@ -1,13 +1,13 @@
 # my-tools
 
-pnpm workspace run by Turborepo.
+pnpm workspace. 태스크는 Turborepo로 돌린다.
 
-| Path | What it is |
+| 경로 | 설명 |
 | --- | --- |
-| [`packages/webview-bridge`](packages/webview-bridge) | Dependency-free postMessage bridge between a page and iOS WKWebView, Android WebView, or React Native WebView. |
-| [`apps/web`](apps/web) | Minimal Vite + React app that imports the bridge. |
+| [`packages/webview-bridge`](packages/webview-bridge) | 페이지와 iOS WKWebView, Android WebView, React Native WebView 사이의 postMessage 브리지. 런타임 의존성 없음. |
+| [`apps/web`](apps/web) | 브리지를 import하는 최소 Vite + React 앱. |
 
-This repository started as a README. There was no application to move. `apps/web` is here so the workspace has a real app target that typechecks, builds, and consumes the package.
+이 저장소는 README만 있었다. 옮길 앱이 없어서, 타입체크와 빌드가 되고 패키지를 실제로 쓰는 앱 타깃으로 `apps/web`을 두었다.
 
 ```bash
 pnpm install
@@ -17,6 +17,6 @@ pnpm typecheck
 pnpm dev
 ```
 
-`pnpm dev` starts the web app. `lint` is `tsc --noEmit` in each package; there is no separate ESLint config.
+`pnpm dev`는 웹 앱을 띄운다. `lint`는 각 패키지의 `tsc --noEmit`이다. ESLint 설정은 없다.
 
-The protocol the native side has to speak is in [packages/webview-bridge/README.md](packages/webview-bridge/README.md).
+네이티브가 따라야 하는 프로토콜은 [packages/webview-bridge/README.md](packages/webview-bridge/README.md)에 있다.
