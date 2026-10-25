@@ -11,6 +11,14 @@ export const DEFAULT_ANDROID_INTERFACE = 'Bridge';
 export const DEFAULT_RECEIVE_NAME = '__webviewBridgeReceive';
 export const DEFAULT_TIMEOUT_MS = 10_000;
 
+/**
+ * Reserved web → native event sent by `announceReady()`.
+ * Native must queue anything it wants to send to the page until this arrives.
+ * Without it, messages native sends before the page script runs are lost
+ * (the bug people usually call a "timing issue").
+ */
+export const READY_EVENT = 'bridge.ready';
+
 export type MessageKind = 'request' | 'response' | 'event';
 
 export interface BridgeErrorBody {
@@ -84,6 +92,11 @@ export interface WebViewBridgeOptions {
   /** Global native calls. Default `__webviewBridgeReceive`. */
   receiveName?: string;
   /**
+   * Call `announceReady()` right after construction. Default `false`.
+   * Turn it on in the real app; leave it off in tests that count posts.
+   */
+  announceReady?: boolean;
+  /**
    * Subscribe to `message` on `window` and `document`.
    * `document` is what React Native WebView uses on Android.
    * Default `true`.
@@ -127,6 +140,7 @@ interface ResolvedOptions {
   timeout: number;
   receiveName: string;
   listen: boolean;
+  announceReady: boolean;
 }
 
 type InboundHandler = (payload: unknown) => unknown;
@@ -316,6 +330,7 @@ function resolveOptions(options: WebViewBridgeOptions): ResolvedOptions {
     timeout,
     receiveName: options.receiveName ?? DEFAULT_RECEIVE_NAME,
     listen: options.listen ?? true,
+    announceReady: options.announceReady ?? false,
   };
 }
 
@@ -344,6 +359,7 @@ export class WebViewBridge<
   constructor(options: WebViewBridgeOptions = {}) {
     this.#options = resolveOptions(options);
     this.#attach();
+    if (this.#options.announceReady) this.announceReady();
   }
 
   /** In-flight requests. Returns to 0 on settle, timeout, post failure, and `destroy`. */
@@ -372,6 +388,22 @@ export class WebViewBridge<
     const payload = args[0];
     const options = (args as unknown[])[1] as RequestOptions | undefined;
     return this.#request(String(method), payload, options) as Promise<ResultOf<TOut, K>>;
+  }
+
+  /**
+   * Tell native the page is listening: emits `READY_EVENT` with `{ version }`.
+   * Call it once after your `on` / `handle` registrations.
+   * Returns `false` instead of throwing when no host is present (a normal browser),
+   * so the same code runs inside and outside the app.
+   */
+  announceReady(): boolean {
+    if (this.#destroyed) return false;
+    try {
+      this.#post(createEnvelope('event', createId(), READY_EVENT, { version: PROTOCOL_VERSION }));
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   /** Subscribe to a native → web event. The returned function is `off` for this handler. */

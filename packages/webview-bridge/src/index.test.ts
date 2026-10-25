@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   BridgeError,
   PROTOCOL_VERSION,
+  READY_EVENT,
   WebViewBridge,
   type BridgeEnvelope,
   type Transport,
@@ -719,6 +720,42 @@ describe('native to web requests', () => {
     resolve?.(1);
     await Promise.resolve();
 
+    expect(posts).toHaveLength(0);
+  });
+});
+
+describe('ready handshake', () => {
+  it('announces readiness as a reserved event with the protocol version', () => {
+    const { posts, transport } = recording();
+    const bridge = create({ transport, listen: false });
+
+    expect(bridge.announceReady()).toBe(true);
+    expect(posts).toHaveLength(1);
+    expect(posts[0]).toMatchObject({
+      version: PROTOCOL_VERSION,
+      kind: 'event',
+      name: READY_EVENT,
+      payload: { version: PROTOCOL_VERSION },
+    });
+    expect(typeof posts[0].id).toBe('string');
+  });
+
+  it('announces on construction when the option is on', () => {
+    const { posts, transport } = recording();
+    create({ transport, listen: false, announceReady: true });
+
+    expect(posts.map((post) => post.name)).toEqual([READY_EVENT]);
+  });
+
+  it('returns false instead of throwing in a plain browser or after destroy', () => {
+    const bridge = create({ listen: false });
+    expect(bridge.announceReady()).toBe(false);
+    expect(() => create({ listen: false, receiveName: 'nativePing', announceReady: true })).not.toThrow();
+
+    const { posts, transport } = recording();
+    const destroyed = create({ transport, listen: false, receiveName: 'nativePing' });
+    destroyed.destroy();
+    expect(destroyed.announceReady()).toBe(false);
     expect(posts).toHaveLength(0);
   });
 });

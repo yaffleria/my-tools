@@ -1,22 +1,361 @@
 :root {
+  --text: #2b2f36;
+  --muted: #6b7280;
+  --bg: #ffffff;
+  --surface: #f7f7f8;
+  --border: #e4e4e7;
+  --accent: #2f6fde;
+  --accent-bg: rgba(47, 111, 222, 0.1);
+  --ok: #1a7f4b;
+  --warn: #a15c00;
+  --error: #c0362c;
+  --in: #6a3fc1;
   color-scheme: light dark;
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  line-height: 1.5;
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --bg: #121317;
+    --surface: #1b1d22;
+    --border: #2c2f36;
+    --accent: #7aa6ff;
+    --accent-bg: rgba(122, 166, 255, 0.14);
+    --ok: #4ade80;
+    --warn: #fbbf24;
+    --error: #f87171;
+    --in: #c4a5ff;
+  }
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  background: var(--bg);
+}
+
+a {
+  color: var(--accent);
+}
+
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 10px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.top nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.top nav a {
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.top nav a[aria-current='page'] {
+  color: var(--accent);
+  background: var(--accent-bg);
 }
 
 main {
-  max-width: 40rem;
+  max-width: 880px;
   margin: 0 auto;
-  padding: 2rem 1.25rem;
+  padding: 24px 16px 48px;
 }
 
-pre {
+footer {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+  font-size: 14px;
+}
+
+h2 {
+  margin: 0 0 6px;
+  font-size: 24px;
+}
+
+h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lead {
+  margin: 0;
+  color: var(--muted);
+}
+
+.muted {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.alert {
+  margin: 0;
+  color: var(--error);
+  font-size: 14px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.card hr {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+.points {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.points li + li {
+  margin-top: 4px;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--accent-bg);
+  word-break: break-all;
+}
+
+button,
+.button,
+input {
+  font: inherit;
+  color: var(--text);
+}
+
+button,
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  cursor: pointer;
+}
+
+button:hover,
+.button:hover {
+  border-color: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.small {
+  min-height: 30px;
+  padding: 2px 10px;
+  font-size: 13px;
+}
+
+input:not([type='checkbox']) {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.search {
+  width: 100%;
+  font-size: 16px; /* 16px 미만이면 iOS가 확대한다 */
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.log {
+  max-height: 260px;
   overflow: auto;
-  padding: 1rem;
-  border: 1px solid color-mix(in srgb, CanvasText 20%, transparent);
-  border-radius: 0.5rem;
+  margin: 0;
+  padding: 10px 12px 10px 32px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.log [data-tone='out'] { color: var(--accent); }
+.log [data-tone='in'] { color: var(--in); }
+.log [data-tone='ok'] { color: var(--ok); }
+.log [data-tone='warn'] { color: var(--warn); }
+.log [data-tone='error'] { color: var(--error); }
+.log [data-tone='info'] { color: var(--muted); }
+
+.results {
+  margin: 0;
+  padding-left: 20px;
+  min-height: 24px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--surface);
+}
+
+.tile:hover {
+  border-color: var(--accent);
+}
+
+.tile span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.tile code {
+  align-self: flex-start;
+}
+
+.preview {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.camera {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #000;
+}
+
+.camera[hidden] {
+  display: none;
+}
+
+.camera video {
+  display: block;
+  width: 100%;
+}
+
+.id-guide {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 80%;
+  height: fit-content;
+  aspect-ratio: 85.6 / 54; /* 신분증(ID-1) 비율 */
+  border: 3px dashed rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.35);
+}
+
+.camera-hint {
+  position: absolute;
+  inset: auto 0 10px;
+  margin: 0;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+}
+
+.signature {
+  border: 1px dashed var(--accent);
+  border-radius: 8px;
+  background: #fff; /* 서명은 종이처럼 흰 바탕에 검은 잉크 */
+}
+
+.signature-result {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
 }
