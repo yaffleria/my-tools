@@ -14,6 +14,18 @@ const ITEMS = [
     pkg: '@my-tools/react-hooks',
   },
   {
+    hash: '#refresh',
+    title: '토큰 갱신',
+    desc: '동시에 401이 나도 refresh는 한 번. 나머지는 기다렸다가 재시도하고, 실패하면 로그아웃도 한 번.',
+    pkg: '@my-tools/http',
+  },
+  {
+    hash: '#encrypt',
+    title: '요청 암호화',
+    desc: 'AES-GCM + RSA 공개키 하이브리드 암호화를 axios 인터셉터로. 재시도 때는 새 키로 다시 암호화.',
+    pkg: '@my-tools/http',
+  },
+  {
     hash: '#camera',
     title: '카메라 촬영',
     desc: 'input capture와 getUserMedia 두 방식. 신분증 가이드, 압축, 카메라 정리.',
@@ -55,7 +67,7 @@ export function HomePage() {
             같은 모노레포 안: <code>"@my-tools/react-hooks": "workspace:*"</code>를 의존성에 추가.
           </li>
           <li>
-            다른 프로젝트: <code>packages/&lt;이름&gt;/src</code> 폴더를 복사. 모두 외부 런타임 의존성이 없다(React 패키지는 react만 필요).
+            다른 프로젝트: <code>packages/&lt;이름&gt;/src</code> 폴더를 복사. 외부 런타임 의존성은 peer로만 둔다(React 패키지는 react, http는 axios).
           </li>
           <li>
             AI에게 맡길 때: 저장소의{' '}

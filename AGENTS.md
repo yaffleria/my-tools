@@ -7,7 +7,7 @@ AI 코딩 도구가 이 저장소의 코드를 쓰거나, 다른 프로젝트에
 - pnpm workspace + Turborepo. 패키지는 `packages/*`, 플레이그라운드 앱은 `apps/web`.
 - TypeScript strict, ESM. 공통 설정은 `tsconfig.base.json`.
 - 검증 명령: `pnpm build && pnpm test && pnpm typecheck`. 셋 다 통과해야 끝난 것.
-- 패키지는 외부 런타임 의존성을 두지 않는다. React 패키지는 `react`를 peerDependency로만.
+- 패키지에 외부 런타임 의존성을 dependencies로 두지 않는다. 필요한 라이브러리는 peerDependency로만 (React 패키지는 `react`, http는 `axios`).
 
 ## 패키지별로 쓰는 법
 
@@ -26,6 +26,13 @@ AI 코딩 도구가 이 저장소의 코드를 쓰거나, 다른 프로젝트에
 - 검색 입력: `useDebouncedSearch(query, (q, signal) => fetcher, { delay, minLength })`. `signal`을 fetch/axios에 반드시 넘긴다.
 - 상태는 `status`로 분기한다. 취소(abort)는 에러로 다루지 않는다.
 - 캐싱이 필요하면 TanStack Query + `useDebouncedValue`.
+
+### @my-tools/http (packages/http/README.md)
+
+- axios 인스턴스는 앱에 하나(`api.ts`). 최신 토큰을 붙이는 요청 인터셉터는 직접 쓰고, 401은 `attachTokenRefresh(api, { refresh, onTokenRefreshed, onRefreshFailed })`.
+- `refresh`는 `api`가 아닌 기본 `axios`나 인터셉터 없는 인스턴스로 호출한다(같은 인스턴스면 데드락).
+- 본문 암호화는 `attachEncryption(api, createHybridEncryptor({ getPublicKey: cachedPublicKey(...) }))`. 서버 규격은 README "서버와 맞출 규격". 클라이언트에 비밀키·대칭키를 두지 않는다.
+- 복호화한 응답·평문 본문을 모니터링(Sentry 등)에 넣지 않는다.
 
 ### @my-tools/mobile-web (packages/mobile-web/README.md)
 

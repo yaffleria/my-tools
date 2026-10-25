@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@my-tools/http": "workspace:*",
     "@my-tools/mobile-web": "workspace:*",
     "@my-tools/react-hooks": "workspace:*",
     "@my-tools/webview-bridge": "workspace:*",
+    "axios": "^1.7.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

@@ -12,10 +12,11 @@
 | --- | --- | --- |
 | [`@my-tools/webview-bridge`](packages/webview-bridge) | 웹 ↔ 앱(iOS·Android·React Native) WebView 통신. 하나의 봉투 형식, 요청-응답 짝짓기, 타임아웃, 준비 신호 | `#bridge` |
 | [`@my-tools/react-hooks`](packages/react-hooks) | `useDebouncedValue`, `useDebouncedSearch`(디바운스 + 요청 취소 + race condition 방지) | `#search` |
+| [`@my-tools/http`](packages/http) | axios 인터셉터: 동시 401 토큰 갱신(`attachTokenRefresh`), 하이브리드 요청 암호화(`attachEncryption`) | `#refresh`, `#encrypt` |
 | [`@my-tools/mobile-web`](packages/mobile-web) | `useCameraStream`·`captureFrame`(카메라), `SignaturePad`(전자서명) | `#camera`, `#signature` |
 | [`apps/web`](apps/web) | 위 패키지를 실제로 쓰는 플레이그라운드 (Vite + React) | — |
 
-모든 패키지는 외부 런타임 의존성이 없습니다. React 패키지는 `react`만 peer로 필요합니다.
+외부 런타임 의존성은 peer로만 둡니다. React 패키지는 `react`, http는 `axios`가 필요합니다.
 
 ## 구조
 
@@ -26,6 +27,7 @@ my-tools/
 ├── packages/
 │   ├── webview-bridge/      src/index.ts 한 파일이 전부. README = 프로토콜 스펙 + 네이티브 예시
 │   ├── react-hooks/         훅 하나 = 파일 하나 (+ .test.ts)
+│   ├── http/                tokenRefresh.ts, encryption.ts (axios 인터셉터)
 │   └── mobile-web/          camera.ts, SignaturePad.tsx
 ├── AGENTS.md                AI에게 줄 저장소 규칙
 ├── turbo.json               태스크 순서 (패키지 build가 앱보다 먼저)
@@ -39,7 +41,7 @@ pnpm workspace로 패키지를 묶고, Turborepo가 `build`·`test`·`typecheck`
 ```bash
 pnpm install
 pnpm dev         # 패키지 빌드 후 플레이그라운드 실행 (http://localhost:5173)
-pnpm test        # Vitest (webview-bridge, react-hooks)
+pnpm test        # Vitest (webview-bridge, react-hooks, http)
 pnpm typecheck
 pnpm build
 ```

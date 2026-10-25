@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react';
 import { BridgePage } from './pages/BridgePage';
 import { CameraPage } from './pages/CameraPage';
+import { EncryptionPage } from './pages/EncryptionPage';
 import { HomePage } from './pages/HomePage';
 import { SearchPage } from './pages/SearchPage';
 import { SignaturePage } from './pages/SignaturePage';
+import { TokenRefreshPage } from './pages/TokenRefreshPage';
 
 const ROUTES = {
   '': { label: '소개', Page: HomePage },
   bridge: { label: 'WebView 브리지', Page: BridgePage },
   search: { label: '디바운스 검색', Page: SearchPage },
+  refresh: { label: '토큰 갱신', Page: TokenRefreshPage },
+  encrypt: { label: '요청 암호화', Page: EncryptionPage },
   camera: { label: '카메라', Page: CameraPage },
   signature: { label: '서명', Page: SignaturePage },
 } as const;
