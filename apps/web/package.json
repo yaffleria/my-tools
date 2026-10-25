@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@my-tools/mobile-web": "workspace:*",
+    "@my-tools/react-hooks": "workspace:*",
     "@my-tools/webview-bridge": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
